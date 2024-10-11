@@ -1,8 +1,4 @@
 pandas
 numpy
-seaborn
-matplotlib
-scikit-learn
-dill
 Flask
-gunicorn==20.1.0
+openai
