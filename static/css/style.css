@@ -1,67 +1,101 @@
-/* for index.html */
-
+/* Basic Reset */
 * {
-    box-sizing: border-box
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
 }
-/* Set height of body and the document to 100% */
+
+/* Body Styling */
 body, html {
     height: 100%;
     margin: 0;
     font-family: Arial;
+    background-color: #ffe3e3; /* Soft pink background */
 }
+
+/* Chatbox and Input Section */
 #chatbox {
-margin-left: auto;
-margin-right: auto;
-width: 40%;
-margin-top: 60px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+    margin-top: 60px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f8d7da; /* Lighter pink background for the chatbox */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
+
 #userInput {
-margin-left: auto;
-margin-right: auto;
-width: 40%;
-margin-top: 60px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+    margin-top: 20px;
 }
+
 #textInput {
-width: 90%;
-border: none;
-border-bottom: 3px solid black;
-font-family: monospace;
-font-size: 17px;
+    width: 100%;
+    border: 2px solid #ffb3b3;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: 'Monospace', sans-serif;
+    font-size: 17px;
+    background-color: #fff0f0; /* Light pink for input background */
+    color: #333;
 }
+
+/* User Message Styling */
 .userText {
-color: white;
-font-family: monospace;
-font-size: 17px;
-text-align: right;
-line-height: 30px;
+    color: white;
+    font-family: 'Monospace', sans-serif;
+    font-size: 17px;
+    text-align: right;
+    line-height: 30px;
+    margin-bottom: 10px;
 }
+
 .userText span {
-background-color: #808080;
-padding: 10px;
-border-radius: 2px;
+    background-color: #ff85a1; /* Soft pink for user messages */
+    padding: 10px;
+    border-radius: 10px;
 }
+
+/* Bot Message Styling */
 .botText {
-color: white;
-font-family: monospace;
-font-size: 17px;
-text-align: left;
-line-height: 30px;
+    color: white;
+    font-family: 'Monospace', sans-serif;
+    font-size: 17px;
+    text-align: left;
+    line-height: 30px;
+    margin-bottom: 10px;
 }
+
 .botText span {
-background-color: #4169e1;
-padding: 10px;
-border-radius: 2px;
+    background-color: #ffb6c1; /* Light pink for bot messages */
+    padding: 10px;
+    border-radius: 10px;
 }
-#tidbit {
-position: absolute;
-bottom: 0;
-right: 0;
-width: 300px;
-}
+
+/* Container Styling */
 .boxed {
-margin-left: auto;
-margin-right: auto;
-width: 78%;
-margin-top: 60px;
-border: 1px solid green;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    margin-top: 40px;
+    border-radius: 10px;
+    border: 2px solid #ffb3b3;
+    background-color: #ffe6e6; /* Soft pink box background */
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+h1{
+    color: #ff6f91; /* Bright pink for headings */
+}
+
+/* Add responsive behavior */
+@media screen and (max-width: 768px) {
+    #chatbox, #userInput {
+        width: 90%;
+    }
 }

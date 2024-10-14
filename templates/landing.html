@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Gen ChatBot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f06, #f7a);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 40px 60px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        .btn {
+            background-color: #fff;
+            color: #f06;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn:hover {
+            background-color: #ff4081;
+            color: white;
+            transform: translateY(-3px);
+        }
+        .btn:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to AI-Gen ChatBot</h1>
+        <p>Interact with the most advanced AI chatbot. Click below to start chatting!</p>
+        <a href="{{ url_for('topics') }}">
+            <button class="btn">Start Chatting</button>
+        </a>
+    </div>
+</body>
+</html>
