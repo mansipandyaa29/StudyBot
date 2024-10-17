@@ -2,3 +2,8 @@ pandas
 numpy
 Flask
 openai
+langchain
+langchain_community
+langchain_openai
+Flask-Login 
+Flask-SQLAlchemy

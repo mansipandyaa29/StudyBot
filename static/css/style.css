@@ -11,7 +11,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: Arial;
-    background-color: #ffe3e3; /* Soft pink background */
+    background: linear-gradient(135deg, #f06, #f7a);
 }
 
 /* Chatbox and Input Section */
@@ -22,8 +22,8 @@ body, html {
     margin-top: 60px;
     padding: 20px;
     border-radius: 10px;
-    background-color: #f8d7da; /* Lighter pink background for the chatbox */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    /* background-color: #f8d7da; Lighter pink background for the chatbox */
+    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); Subtle shadow for depth */
 }
 
 #userInput {
@@ -40,7 +40,8 @@ body, html {
     padding: 10px;
     font-family: 'Monospace', sans-serif;
     font-size: 17px;
-    background-color: #fff0f0; /* Light pink for input background */
+    /* Light pink for input background */
+    background-color: #fff0f0; 
     color: #333;
 }
 
@@ -55,7 +56,8 @@ body, html {
 }
 
 .userText span {
-    background-color: #ff85a1; /* Soft pink for user messages */
+    /* Soft pink for user messages */
+    background-color: #ff85a1; 
     padding: 10px;
     border-radius: 10px;
 }
@@ -71,7 +73,8 @@ body, html {
 }
 
 .botText span {
-    background-color: #ffb6c1; /* Light pink for bot messages */
+    /* Light pink for bot messages */
+    background-color: #ffb6c1; 
     padding: 10px;
     border-radius: 10px;
 }
@@ -83,14 +86,14 @@ body, html {
     width: 80%;
     margin-top: 40px;
     border-radius: 10px;
-    border: 2px solid #ffb3b3;
-    background-color: #ffe6e6; /* Soft pink box background */
+    /* border: 2px solid #ffb3b3; */
+    /* background: linear-gradient(135deg, #f06, #f7a); Soft pink box background */
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); Light shadow for depth */
 }
 
 h1{
-    color: #ff6f91; /* Bright pink for headings */
+    color: #fde3e9; /* Bright pink for headings */
 }
 
 /* Add responsive behavior */

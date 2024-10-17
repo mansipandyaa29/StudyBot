@@ -17,21 +17,24 @@ chatbot = ChatBot()
 def landing():    
     return render_template("landing.html")
 
-# Route for the chatbot page
+# Route for the topics page
 @app.route("/topics")
 def topics():    
     return render_template("topics.html")
 
 # Route for the chatbot page
-@app.route("/chatbot")
-def chatbot():    
-    return render_template("index.html")
+@app.route("/topics/chatbot")
+def chatbot_home():    
+    topic = request.args.get('topic')
+    chatbot.set_topic(topic)  
+    return render_template("index.html", topic=topic)
 
+#  As the user continues to input messages, the same process repeats:
 @app.route("/get")
 def get_bot_response():    
     userText = request.args.get('msg')  
-    response = chatbot.get_completion(userText) 
+    response = chatbot.just_chatbot(userText) 
     return response
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug = True)
+    app.run(host='0.0.0.0', port=8000, debug = True)
