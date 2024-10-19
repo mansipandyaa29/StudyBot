@@ -7,3 +7,4 @@ langchain_community
 langchain_openai
 Flask-Login 
 Flask-SQLAlchemy
+Flask-Migrate

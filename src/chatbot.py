@@ -4,8 +4,6 @@ from langchain_openai import OpenAI
 from langchain.memory import ConversationSummaryBufferMemory
 from langchain.chains import ConversationChain
 
-
-
 class ChatBot:
     def __init__(self):
         # Load the API key from the environment variable
@@ -37,7 +35,7 @@ class ChatBot:
     def just_chatbot(self,user_input):
         prompt = f"""
         You are a my interviewer and its my {self.topic} interview. 
-        Ask me theoretical questions and my replies will be the answers I type out. 
+        Ask me theoretical questions one by one and my replies will be the answers I type out. 
         Tell me how I do and keep asking unique and different questions . 
         Try to cover all the possible questions.
         Don't deep dive into a single question unless I explicitly ask for it.

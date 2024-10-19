@@ -4,47 +4,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Topics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #f06, #f7a);
+            font-family: 'Nunito', sans-serif;
+            background-color: #f4f4f9; /* Soft off-white background */
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: white;
+            color: #3c3c3c;
             text-align: center;
         }
-        .container {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 40px 60px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+        /* Top bar style */
+        .top-bar {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between; /* Space between username and logout */
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000; /* Make sure it's always visible */
+            border-radius: 0 0 20px 20px; /* Rounded bottom corners */
         }
+
+        .top-bar button {
+            background-color: #6c63ff; /* Soft purple */
+            color: white;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .top-bar button:hover {
+            background-color: #574b90; /* Darker purple on hover */
+            transform: translateY(-3px);
+        }
+
+        .top-bar .username {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Container for topics */
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 80px; /* Space for top bar */
+            width: 400px;
+            z-index: 1; /* Ensure it's above background */
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+
         .btn {
-            background-color: #fff;
-            color: #f06;
-            padding: 15px 40px;
+            background-color: #6c63ff; /* Soft purple */
+            color: white;
+            padding: 15px 30px;
             font-size: 16px;
             font-weight: bold;
             text-transform: uppercase;
             border: none;
-            border-radius: 50px;
+            border-radius: 25px;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
             margin: 10px; /* Add margin for spacing */
+            width: 100%; /* Full width buttons */
         }
+
         .btn:hover {
-            background-color: #ff4081;
-            color: white;
+            background-color: #574b90; /* Darker purple on hover */
             transform: translateY(-3px);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 600px) {
+            .top-bar {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+                margin-top: 100px; /* Adjust space for the top bar on small screens */
+            }
+
+            .btn {
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Top bar with Username and Logout button -->
+    <div class="top-bar">
+        <span class="username">Welcome, {{ username }}</span> <!-- Username placeholder -->
+        <button onclick="window.location.href='/logout'">Logout</button>
+    </div>
+
     <div class="container">
         <h1>Select a Topic</h1>
         <a href="/topics/chatbot?topic=AI">
@@ -60,5 +136,6 @@
             <button class="btn">Natural Language Processing</button>
         </a>
     </div>
+
 </body>
 </html>
