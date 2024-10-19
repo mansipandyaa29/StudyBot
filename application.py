@@ -108,7 +108,7 @@ def logout():
 @app.route("/topics")
 @login_required
 def topics():
-    return render_template("topics.html", username=current_user.username)
+    return render_template("dashboard.html", username=current_user.username)
 
 @app.route("/topics/chatbot")
 @login_required
