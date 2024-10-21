@@ -1,16 +1,14 @@
 from flask import Flask, request, render_template, redirect, url_for, flash, session
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from src.chatbot import ChatBot
+from src.database_models import db, User, ChatMessage
 import os
-from datetime import datetime
-from flask_migrate import Migrate
 
 
 application = Flask(__name__)
 app = application
-app.secret_key = 'your_secret_key'  # Replace with a secure key
+app.secret_key = 'your_secret_key'  
 # This line ensures the app knows to look in the 'instance' folder for the database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'user.db')
 # Ensure the instance folder exists if it doesn’t
@@ -18,28 +16,13 @@ os.makedirs(app.instance_path, exist_ok=True)
 # Disable modification tracking to save resources
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+# Initialize the database with the app
+db.init_app(app)  
 
 # Initialize Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-
-class ChatMessage(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    message = db.Column(db.String(1000), nullable=False)
-    sender = db.Column(db.String(50), nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    topic = db.Column(db.String(150), nullable=False)  # New column to store the topic
-
-    user = db.relationship('User', backref='messages')
 
 
 # Instantiate the ChatBot class
@@ -105,21 +88,20 @@ def logout():
     return redirect(url_for('login'))
 
 # Route for the topics page (accessible only after login)
-@app.route("/topics")
+@app.route("/dashboard")
 @login_required
 def topics():
     return render_template("dashboard.html", username=current_user.username)
 
-@app.route("/topics/chatbot")
+@app.route("/dashboard/chatbot")
 @login_required
 def chatbot_home():
     topic = request.args.get('topic')
     chatbot.set_topic(topic)
     session['topic'] = topic
-    # Fetch all messages for the current user and the selected topic
     chat_history = ChatMessage.query.filter_by(user_id=current_user.id, topic=topic).order_by(ChatMessage.timestamp).all()
-
-    return render_template("index.html", topic=topic, username=current_user.username, chat_history=chat_history)
+    new_chat = len(chat_history) == 0
+    return render_template("index.html", topic=topic, username=current_user.username, chat_history=chat_history,new_chat=new_chat)
 
 
 @app.route("/get")
@@ -134,7 +116,9 @@ def get_bot_response():
     db.session.commit()
 
     # Get the chatbot's response
-    response = chatbot.just_chatbot(userText)
+    # response = chatbot.handle_chat(current_user.id,userText,topic)
+    session_id = f"{current_user.id}_{topic}"
+    response = chatbot.run_chain(userText, session_id)
 
     # Save the chatbot's response with the topic
     bot_message = ChatMessage(user_id=current_user.id, message=response, sender="bot", topic=topic)

@@ -1,54 +1,103 @@
-# chatbot.py
 import os
 from langchain_openai import OpenAI
-from langchain.memory import ConversationSummaryBufferMemory
-from langchain.chains import ConversationChain
+
+from langchain_core.chat_history import BaseChatMessageHistory
+from src.database_models import ChatMessage
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_openai import ChatOpenAI
+from langchain_core.runnables.history import RunnableWithMessageHistory
 
 class ChatBot:
     def __init__(self):
-        # Load the API key from the environment variable
         api_key = os.getenv('OPENAI_API_KEY')
-        self.client = OpenAI(api_key=api_key)
         self.topic = None
-        self.memory = ConversationSummaryBufferMemory(llm=self.client, max_token_limit=100)
-        self.conversation = ConversationChain(llm=self.client)
-    
+        self.chat = ChatOpenAI(api_key=api_key, model="gpt-3.5-turbo-0125")
+
     def set_topic(self, topic):
         self.topic = topic
 
-    def get_completion(self, prompt, model="gpt-4o"):
-        # prompt = f"""
-        # You are a my interviewer and its my {self.topic} interview. 
-        # Ask me questions and my replies will be the answers I type out. 
-        # Tell me how I do and keep asking 10 unique and different questions . 
-        # Try to cover all the possible questions.
-        # """
-        messages = [{"role": "user", "content": prompt}]
-        response = self.client.chat.completions.create(
-            model=model,
-            messages=messages,
-            temperature=0
-        )
-        return response.choices[0].message.content
-    
-    #no stored memory for this chatbot
-    def just_chatbot(self,user_input):
-        prompt = f"""
-        You are a my interviewer and its my {self.topic} interview. 
-        Ask me theoretical questions one by one and my replies will be the answers I type out. 
-        Tell me how I do and keep asking unique and different questions . 
-        Try to cover all the possible questions.
-        Don't deep dive into a single question unless I explicitly ask for it.
-        User input: {user_input}"""
-        output = self.conversation.predict(input=prompt)
-        return output
-
-    #this chatbot stores memory
-    def memory_chatbot(self, user_input):
-        conversation = ConversationChain(llm=self.client,memory=self.memory)
-        output = conversation.predict(input=user_input)
-        self.memory.save_context({"input": user_input}, {"output": output})
-        return output
-
-    
+    # Get all the messages for a particular user and topic
+    def get_session_history(self,session_id) -> BaseChatMessageHistory:
+        user,topic = session_id.split("_")
+        user_id = int(user)
         
+        chat_history = ChatMessageHistory()
+
+        previous_messages = ChatMessage.query.filter_by(user_id=user_id, topic=topic).order_by(ChatMessage.timestamp).all()
+
+        for msg in previous_messages:
+            if msg.sender == 'user':
+                chat_history.add_user_message(msg.message)
+            elif msg.sender == 'bot':
+                chat_history.add_ai_message(msg.message)
+
+        return chat_history        
+    # Method to summarize messages
+    def summarize_messages(self, chat_history: ChatMessageHistory) -> bool:
+        stored_messages = chat_history.messages
+        if len(stored_messages) == 0:
+            return False
+
+        summarization_prompt = ChatPromptTemplate.from_messages(
+            [
+                ("placeholder", "{chat_history}"),
+                (
+                    "user",
+                    "Distill the above chat messages into a single summary message. Include as many specific details as you can.",
+                ),
+            ]
+        )
+        summarization_chain = summarization_prompt | self.chat
+
+        summary_message = summarization_chain.invoke({"chat_history": stored_messages})
+        print("Summary",summary_message)
+
+        chat_history.clear()
+        chat_history.add_ai_message(summary_message)
+
+        return True
+    
+    # Method to generate a response based on user input and session history
+    def generate_response(self, input_message: str, session_id: str) -> str:
+        chat_history = self.get_session_history(session_id)
+        user,topic = session_id.split("_")
+
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    f"""You are an here to help me practice concepts for the topic of {topic}. 
+                    Please only ask questions relevant to {topic} and avoid discussing any other topics. 
+                    Your role is to ask insightful questions based on the chat history and provide feedback on my answers.""",
+                ),
+                ("placeholder", "{chat_history}"),
+                ("user", "{input}"),
+            ]
+        )
+
+        # Combine prompt and AI client for response generation
+        chain = prompt | self.chat
+
+        # Simulate message history and invoke the chat
+        chain_with_message_history = RunnableWithMessageHistory(
+            chain,
+            lambda session_id: chat_history,
+            input_messages_key="input",
+            history_messages_key="chat_history",
+        )
+
+        self.summarize_messages(chat_history)
+
+        response = chain_with_message_history.invoke(
+            {"input": input_message},
+            {"configurable": {"session_id": session_id}},
+        )
+
+        return response.content
+
+    # Method to handle a full chatbot flow
+    def run_chain(self, input_message: str, session_id: str):
+        return self.generate_response(input_message, session_id)
+

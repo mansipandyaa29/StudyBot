@@ -123,10 +123,11 @@
         }
 
         /* Responsive adjustments for smaller screens */
-        @media (max-width: 600px) {
+        @media (max-width: 600px){
             .top-bar {
                 padding: 10px;
             }
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
@@ -139,6 +140,13 @@
     <div>
         <div class="boxed">
             <div id="chatbox">
+                <!-- Display the bot greeting for the new chat session -->
+                {% if new_chat %}
+                    <p class="botText">
+                        <span>Hi! I'm your StudyBot and I'm going to help you prepare for your {{ topic }} interview!</span>
+                    </p>
+                {% endif %}
+
                 <!-- Display chat history -->
                 {% for message in chat_history %}
                     {% if message.sender == "user" %}
@@ -147,10 +155,6 @@
                         <p class="botText"><span>{{ message.message }}</span></p>
                     {% endif %}
                 {% endfor %}
-                <!-- Display the bot greeting for the new chat session -->
-                <p class="botText">
-                    <span>Hi! I'm your StudyBot and I'm going to help you prepare for your {{topic}} interview!</span>
-                </p>
             </div>
             <div id="userInput">
                 <input id="textInput" type="text" name="msg" placeholder="Type your message here..." />
